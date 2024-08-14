@@ -1,3 +1,5 @@
+import {cart} from '../data/cart.js';
+
 let productsHTML = '';
 
 products.forEach((product) => {
@@ -85,7 +87,7 @@ document.querySelectorAll('.js-add-to-cart').forEach( (button) => {
     const timeoutId = setTimeout( () => {
       added.classList.remove('css-opacity-1');
     }, "2000" );
-    
+
     addedMessageTimeouts[productId] = timeoutId;
     
     
