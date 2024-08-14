@@ -1,4 +1,4 @@
-import {cart} from '../data/cart.js';
+import {cart, addToCart} from '../data/cart.js';
 import {products} from '../data/products.js'
 
 let productsHTML = '';
@@ -60,24 +60,28 @@ products.forEach((product) => {
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
+
+
+function updateCartQuantity(){
+  let cartQuantity = 0;
+  cart.forEach( (cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  console.log(cart);
+
+}
+
 document.querySelectorAll('.js-add-to-cart').forEach( (button) => {
   button.addEventListener('click', () => {
     const {productId} = button.dataset;
-
-    let matchingItem;
-    cart.forEach( (item) => {
-      if(productId === item.productId){
-        matchingItem = item;
-      }
-    });
-
-    let quantity = document.querySelector(`.js-quantity-selector-${productId}`).value
-    quantity = Number(quantity);
+    addToCart(productId);
+    updateCartQuantity();
 
     const added = document.querySelector(`.js-added-to-cart-${productId}`)
     added.classList.add('css-opacity-1');
 
-    
     const addedMessageTimeouts = {};
 
     const previousTimeoutId = addedMessageTimeouts[productId];
@@ -90,23 +94,6 @@ document.querySelectorAll('.js-add-to-cart').forEach( (button) => {
     }, "2000" );
 
     addedMessageTimeouts[productId] = timeoutId;
-    
-    
-    if(matchingItem){
-      matchingItem.quantity += 1;
-    } else {
-      cart.push({
-        productId,
-        quantity
-      });
-    }
-
-    let cartQuantity = 0;
-    cart.forEach( (item) => {
-      cartQuantity += item.quantity;
-    });
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-    console.log(cart);
   });
 });
 
