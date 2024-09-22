@@ -1,8 +1,8 @@
 import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from '../../data/cart.js';
-import {products} from '../../data/products.js';
+import {products, getProduct} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import {deliveryOptions} from '../../data/deliveroptions.js';
+import {deliveryOptions, getDeliveryOptions} from '../../data/deliveroptions.js';
 
 
 export function renderOrderSummary(){
@@ -11,23 +11,12 @@ export function renderOrderSummary(){
   cart.forEach((cartItem) => {
     const productId = cartItem.productId;
   
-    let matchingProduct;
-  
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-      }
-    });
+    const matchingProduct = getProduct(productId);
   
     const deliveryOptionId = cartItem.deliveryOptionId;
   
-    let deliveryOption;
-  
-    deliveryOptions.forEach((option) => {
-      if(option.id === deliveryOptionId){
-        deliveryOption = option;
-      }
-    });
+    const deliveryOption = getDeliveryOptions(deliveryOptionId);
+
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
     const dataString = deliveryDate.format('dddd, MMMM, D');
@@ -129,7 +118,6 @@ export function renderOrderSummary(){
     document.querySelectorAll('.js-update-link').forEach((link) => {
       link.addEventListener('click', () => {
         const productId = link.dataset.productId;
-        console.log(productId);
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.classList.add('is-editing-quantity');
       });
@@ -138,7 +126,6 @@ export function renderOrderSummary(){
     document.querySelectorAll('.js-save-quantity').forEach((link) => {
       link.addEventListener('click', () => {
         const productId = link.dataset.productId;
-        console.log(productId);
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         let quantityInput = document.querySelector(`.js-quantity-input-${productId}`).value;
         quantityInput = Number(quantityInput);
