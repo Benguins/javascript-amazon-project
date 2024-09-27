@@ -49,13 +49,13 @@ class Cart {
   removeFromCart(productId) {
     const newCart = [];
   
-    this.cartItem.forEach((cartItem) => {
+    this.cartItems.forEach((cartItem) => {
       if (cartItem.productId !== productId) {
         newCart.push(cartItem);
       }
     });
   
-    this.cartItem = newCart;
+    this.cartItems = newCart;
   
     this.saveToStorage();
   }
@@ -86,7 +86,7 @@ class Cart {
   updateDeliveryOption(productId, deliveryOptionId){
     let matchingItem;
   
-    this.cartItem.forEach((cartItem) => {
+    this.cartItems.forEach((cartItem) => {
       if (productId === cartItem.productId) {
         matchingItem = cartItem;
       }
@@ -99,11 +99,12 @@ class Cart {
 
 }
 
-const cart = new Cart('cart-oop');
+export const cart = new Cart('cart-oop');
 const buisnessCart = new Cart('cart-buinsess');
 
-console.log(cart);
-console.log(buisnessCart);
+
+
+
 
 
 

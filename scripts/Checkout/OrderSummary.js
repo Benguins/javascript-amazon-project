@@ -1,4 +1,3 @@
-import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from '../../data/cart.js';
 import {products, getProduct} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
@@ -6,12 +5,13 @@ import {deliveryOptions, getDeliveryOptions, calculateDeliveryDate} from '../../
 import {renderPaymentSummary} from './PaymentSummary.js';
 import {isWeekend as isSatSun} from '../utils/DateFunctions.js';
 import {renderCheckoutHeader} from '../Checkout/CheckoutHeader.js';
+import {cart} from '../../data/Cart-Class.js';
 
 
 export function renderOrderSummary(){
   let cartSummaryHTML = '';
 
-  cart.forEach((cartItem) => {
+  cart.cartItems.forEach((cartItem) => {
     const productId = cartItem.productId;
   
     const matchingProduct = getProduct(productId);
@@ -104,7 +104,7 @@ export function renderOrderSummary(){
     .forEach((link) => {
       link.addEventListener('click', () => {
         const productId = link.dataset.productId;
-        removeFromCart(productId);
+        cart.removeFromCart(productId);
         renderOrderSummary();
         renderCheckoutHeader();
         renderPaymentSummary();
@@ -125,7 +125,7 @@ export function renderOrderSummary(){
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         let quantityInput = document.querySelector(`.js-quantity-input-${productId}`).value;
         quantityInput = Number(quantityInput);
-        updateQuantity(productId, quantityInput);
+        cart.updateQuantity(productId, quantityInput);
         container.classList.remove('is-editing-quantity');
         renderPaymentSummary();
       });
@@ -136,14 +136,14 @@ export function renderOrderSummary(){
   document.querySelectorAll('.js-delivery-option').forEach((element) => {
     element.addEventListener('click', () => {
       const {productId, deliveryOptionId} = element.dataset;
-      updateDeliveryOption(productId, deliveryOptionId);
+      cart.updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary();
       renderPaymentSummary();
     });
   });
 }
 
-// console.log(isSatSun(dayjs()));
+
 
 
 
